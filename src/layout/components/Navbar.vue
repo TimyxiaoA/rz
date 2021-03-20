@@ -21,14 +21,11 @@
               首页
             </el-dropdown-item>
           </router-link>
-          <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
-            <el-dropdown-item>Github</el-dropdown-item>
-          </a>
-          <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
-            <el-dropdown-item>Docs</el-dropdown-item>
+          <a target="_blank" href="https://github.com/TimyxiaoA/rz.git">
+            <el-dropdown-item>项目地址</el-dropdown-item>
           </a>
           <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">Log Out</span>
+            <span style="display:block;">退出登录</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -46,6 +43,7 @@ export default {
   },
   data() {
     return {
+      // js中引用本地图片需要加上 require 防止打包时出错
       defaultImg: require('@/assets/common/head.jpg')
     }
   },
@@ -60,8 +58,8 @@ export default {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
-    async logout() {
-      await this.$store.dispatch('user/logout')
+    logout() {
+      this.$store.dispatch('user/logout')
       this.$router.push(`/login`)
     }
   }

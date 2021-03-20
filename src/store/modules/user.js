@@ -1,9 +1,11 @@
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken, setTimeStamp } from '@/utils/auth'
 import { login, getUserInfo, getUserDetailById } from '@/api/user'
+
 const state = {
   token: getToken(), // 从本地获取 token
   userInfo: {} // 用户信息
 }
+
 const mutations = {
   // 储存本地 token
   setToken(state, token) {
@@ -17,18 +19,21 @@ const mutations = {
   },
   // 设置用户信息
   setUserInfo(state, userInfo) {
-    state.userInfo = { ...userInfo }
+    state.userInfo = userInfo
   },
   // 删除用户信息
   reomveUserInfo(state) {
     state.userInfo = {}
   }
 }
+
 const actions = {
   // 用户登录
   async login(context, data) {
     const res = await login(data)
     context.commit('setToken', res)
+    // 写入时间戳  将当前的最新时间写入缓存
+    setTimeStamp()
   },
   // 获取用户信息
   async getUserInfo(context) {
@@ -46,6 +51,7 @@ const actions = {
     context.commit('reomveUserInfo')
   }
 }
+
 export default {
   namespaced: true,
   state,

@@ -15,6 +15,7 @@ router.beforeEach(async(to, from, next) => {
     if (to.path === '/login') {
       next('/')
     } else {
+      // ! NavBar 组件里 created 钩子里面调用获取用户信息的 action 也可以
       if (!store.getters.name) {
         // 如果没有 username 表示当前用户资料没有获取过
         await store.dispatch('user/getUserInfo')

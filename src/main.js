@@ -17,10 +17,8 @@ import '@/permission' // permission control
 
 // 引入语法  **`import *  as  变量`**  得到的是一个对象**`{ 变量1：对象1，变量2： 对象2 ...   }`**, 所以可以采用对象遍历的方法进行处理
 import * as directives from '@/directives'
-// 注册自定义指令
 // 遍历所有的导出的指令对象 完成自定义全局注册
 Object.keys(directives).forEach(key => {
-  // 注册自定义指令
   Vue.directive(key, directives[key])
 })
 
