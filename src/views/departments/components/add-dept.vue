@@ -55,6 +55,7 @@ export default {
 
       isRepeat ? callback(new Error(`当前部门下已存在${value}这个子部门了`)) : callback()
     }
+
     const checkCodeRepeat = async(rule, value, callback) => {
       const { depts } = await getDepartments()
       let isRepeat = false

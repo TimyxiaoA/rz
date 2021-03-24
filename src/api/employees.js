@@ -13,3 +13,14 @@ export function getEmployeeSimple() {
     url: '/sys/user/simple'
   })
 }
+
+/*
+* 获取员工综合列表
+*/
+export function getEmployeeList(params) {
+  return request({
+    method: 'GET',
+    url: '/sys/user',
+    params
+  })
+}
