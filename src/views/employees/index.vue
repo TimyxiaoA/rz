@@ -12,7 +12,7 @@
             @click="$router.push({ path: '/import', query: { redirect: '/employees' }})"
           >导入</el-button>
           <el-button size="small" type="danger" @click="exportData">导出</el-button>
-          <el-button size="small" type="primary" @click="showDialog=true">新增员工</el-button>
+          <el-button :disabled="!checkPermission('POINT-USER-ADD')" size="small" type="primary" @click="showDialog=true">新增员工</el-button>
         </template>
       </page-tools>
 
@@ -32,6 +32,7 @@
               >
             </template>
           </el-table-column>
+          <el-table-column label="手机号" prop="mobile" />
           <el-table-column label="工号" prop="workNumber" sortable />
           <el-table-column label="聘用形式" prop="formOfEmployment" :formatter="formatEmployment" sortable />
           <el-table-column label="部门" prop="departmentName" sortable />
@@ -45,9 +46,9 @@
               <el-switch :value="row.enableState === 1" />
             </template>
           </el-table-column>
-          <el-table-column label="操作" sortable fixed="right" width="280">
+          <el-table-column label="操作" fixed="right" width="240">
             <template v-slot="{ row }">
-              <el-button type="text" size="small" @click="$router.push(`/employees/detail/${row.id}`)">查看</el-button>
+              <el-button :disabled="!checkPermission('POINT-USER-UPDATE')" type="text" size="small" @click="$router.push(`/employees/detail/${row.id}`)">查看</el-button>
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>

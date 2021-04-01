@@ -15,7 +15,7 @@
               <el-table-column align="center" prop="description" label="描述" />
               <el-table-column align="center" label="操作">
                 <template slot-scope="{ row }">
-                  <el-button type="success" size="small">分配权限</el-button>
+                  <el-button type="success" size="small" @click="assignPerm(row.id)">分配权限</el-button>
                   <el-button type="primary" size="small" @click="editRole(row.id)">修改</el-button>
                   <el-button type="danger" size="small" @click="deleteRole(row.id)">删除</el-button>
                 </template>
@@ -35,7 +35,7 @@
               show-icon
               :closable="false"
             />
-            <el-form label-width="120px" style="margin-top:50px">
+            <el-form label-width="120px" style="margin-top:50px;user-select:none;">
               <el-form-item label="公司名称">
                 <el-input v-model="formData.name" disabled style="width:400px" />
               </el-form-item>
@@ -75,15 +75,38 @@
         </el-row>
       </el-dialog>
 
+      <!--分配权限弹层  -->
+      <el-dialog title="分配权限" :visible.sync="showPermDialog" @close="btnPremCancel">
+        <el-tree
+          ref="premTree"
+          :data="premData"
+          :props="defaultProps"
+          default-expand-all
+          show-checkbox
+          check-strictly
+          :default-checked-keys="selectCheck"
+          node-key="id"
+        />
+        <el-row slot="footer" type="flex" justify="end">
+          <el-col :span="6">
+            <el-button size="small" @click="btnPremCancel">取消</el-button>
+            <el-button type="primary" size="small" @click="btnPremOk">确定</el-button>
+          </el-col>
+        </el-row>
+      </el-dialog>
+
     </div>
   </div>
 </template>
 
 <script>
-import { getRoleList, getCompanyInfo, deleteRole, getRoleDetails, editRole, addRole } from '@/api/setting'
+import { getRoleList, getCompanyInfo, deleteRole, getRoleDetails, editRole, addRole, assignPrem } from '@/api/setting'
+import { getPermissionList } from '@/api/permission'
 import { mapGetters } from 'vuex'
+import { tranListToTreeData } from '@/utils'
 
 export default {
+  name: 'Setting',
   data() {
     return {
       queryInfo: {
@@ -100,7 +123,14 @@ export default {
       },
       rules: {
         name: [{ required: true, message: '角色名称不能为空', trigger: 'blur' }]
-      }
+      },
+      showPermDialog: false,
+      premData: [], // 所有权限列表
+      defaultProps: {
+        label: 'name'
+      },
+      selectCheck: [], // 被选中的多选框 id 数组
+      roleId: null // 当前点击的角色id
     }
   },
   computed: {
@@ -146,7 +176,7 @@ export default {
       this.roleForm = await getRoleDetails(id) // 数据回写
       this.showDialog = true // 展示弹层
     },
-    // 修改或添加角色
+    // 修改或添加角色按钮
     async btnOk() {
       const formDate = this.roleForm
       if (formDate.id) {
@@ -160,7 +190,7 @@ export default {
       this.showDialog = false
       this.getRoleList()
     },
-    // 取消
+    // 取消按钮
     btnCancel() {
       this.roleForm = {
         name: '',
@@ -168,6 +198,28 @@ export default {
       }
       this.$refs.roleFormRef.resetFields()
       this.showDialog = false
+    },
+    // 展示分配权限弹层
+    async assignPerm(id) {
+      this.premData = tranListToTreeData(await getPermissionList(), '0') // 获取所有权限并转换为 树形
+      this.roleId = id
+      const { permIds } = await getRoleDetails(id) // 获取当前角色的权限点
+      this.selectCheck = permIds
+      this.showPermDialog = true
+      // this.$nextTick(() => {
+      //   this.$refs.premTree.setCheckedKeys(permIds, true)
+      // })
+    },
+    // 确定按钮
+    async btnPremOk() {
+      const keysCheck = this.$refs.premTree.getCheckedKeys()
+      await assignPrem({ id: this.roleId, permIds: keysCheck })
+      this.$message.success('分配权限成功')
+      this.showPermDialog = false
+    },
+    btnPremCancel() {
+      this.selectCheck = [] // 重置数据
+      this.showPermDialog = false
     }
   }
 }

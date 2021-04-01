@@ -66,3 +66,14 @@ export function addRole(data) {
     data
   })
 }
+
+/*
+*  给角色分配权限
+*/
+export function assignPrem(data) {
+  return request({
+    method: 'PUT',
+    url: '/sys/role/assignPrem',
+    data
+  })
+}

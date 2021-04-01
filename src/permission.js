@@ -18,10 +18,16 @@ router.beforeEach(async(to, from, next) => {
       // ! NavBar 组件里 created 钩子里面调用获取用户信息的 action 也可以
       if (!store.getters.name) {
         // 如果没有 username 表示当前用户资料没有获取过
-        await store.dispatch('user/getUserInfo')
-        // 为什么要写await 因为我们想获取完资料再去放行
+        // 为什么要写await 因为我们想获取完资料再去放行 便于后续的处理
+        const { roles } = await store.dispatch('user/getUserInfo')
+        // 筛选当前用户的可用动态路由
+        const routes = await store.dispatch('permission/filterRoutes', roles.menus)
+        // addRoutes 添加路由之后, 要求必须再执行一次路由的逻辑
+        router.addRoutes(routes)
+        next(to.path)
+      } else {
+        next()
       }
-      next()
     }
   } else {
     // 无 token

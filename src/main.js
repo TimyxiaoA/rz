@@ -19,6 +19,7 @@ import '@/permission' // permission control
 // 引入语法  **`import *  as  变量`**  得到的是一个对象**`{ 变量1：对象1，变量2： 对象2 ...   }`**
 import * as directives from '@/directives'
 import * as filters from '@/filters'
+import mixin from '@/mixin'
 
 // set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })
@@ -36,6 +37,8 @@ Object.keys(directives).forEach(key => {
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
+// 全局混入
+Vue.mixin(mixin)
 
 new Vue({
   el: '#app',

@@ -3,15 +3,14 @@ import Layout from '@/layout'
 export default {
   path: '/employees',
   component: Layout,
+  meta: { name: 'employees' },
   children: [
     { path: '',
-      name: 'Employess',
       component: () => import('@/views/employees/index'),
       meta: { title: '员工', icon: 'people' }
     },
     {
       path: 'detail/:id?', // query传参 动态路由传参 加 ? 表示id参数可传可不传
-      name: 'Detail',
       component: () => import('@/views/employees/detail'),
       hidden: true, // 不在左侧菜单显示
       meta: {

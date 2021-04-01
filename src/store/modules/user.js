@@ -1,5 +1,6 @@
 import { getToken, setToken, removeToken, setTimeStamp } from '@/utils/auth'
 import { login, getUserInfo, getUserDetailById } from '@/api/user'
+import { resetRouter } from '@/router'
 
 const state = {
   token: getToken(), // 从本地获取 token
@@ -42,13 +43,17 @@ const actions = {
     // 合并用户信息
     const baseRes = { ...res, ...baseInfo }
     context.commit('setUserInfo', baseRes)
-    // TODO
-    return baseRes
+    //! 后续添加动态路由时使用
+    return res
   },
   // 用户退出
   logout(context) {
-    context.commit('removeToken')
-    context.commit('reomveUserInfo')
+    context.commit('removeToken') // 删除 token
+    context.commit('reomveUserInfo') // 删除用户资料
+    resetRouter() // 重置路由
+    // 重置 vuex中的 routes
+    //! 都有命名空间的子模块如何互相调用 actions 和 mutations  设置第三个参数为 { root: true }
+    context.commit('permission/setRoutes', [], { root: true })
   }
 }
 

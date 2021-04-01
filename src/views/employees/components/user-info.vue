@@ -1,6 +1,6 @@
 <template>
   <div class="user-info">
-    <!-- 个人信息 -->
+    <!-- 个人基本信息 -->
     <el-form label-width="220px">
       <!-- 工号 入职时间 -->
       <el-row class="inline-info">
@@ -290,7 +290,7 @@ import { getPersonalDetail, updatePersonal, saveUserDetailById } from '@/api/emp
 import { getUserDetailById } from '@/api/user'
 
 export default {
-  name: 'Xxx',
+  name: 'UserInfo',
   data() {
     return {
       userId: this.$route.params.id,
@@ -391,6 +391,7 @@ export default {
       }
       await saveUserDetailById({ ...this.userInfo, staffPhoto: fileList && fileList.length ? fileList[0].url : ' ' })
       this.$message.success('保存基本信息成功')
+      this.$store.dispatch('user/getUserInfo')
     },
     async savePersonal() {
       const fileList = this.$refs.myStaffPhoto.fileList
@@ -400,6 +401,7 @@ export default {
       }
       await updatePersonal({ ...this.formData, staffPhoto: fileList && fileList.length ? fileList[0].url : ' ' })
       this.$message.success('保存基础信息成功')
+      this.$store.dispatch('user/getUserInfo')
     }
   }
 }
