@@ -5,7 +5,7 @@
       <div>
         <div class="fl headL">
           <div class="headImg">
-            <img :src="userInfo.staffPhoto">
+            <img v-imagerror="defaultImg" :src="userInfo.staffPhoto">
           </div>
           <div class="headInfoTip">
             <p class="firstChild">早安，{{ userInfo.username }}，祝你开心每一天！</p>
@@ -74,8 +74,8 @@
           <div class="sideNav">
             <el-button class="sideBtn" @click="showDialog = true">加班离职</el-button>
             <el-button class="sideBtn">请假调休</el-button>
-            <el-button class="sideBtn">审批列表</el-button>
-            <el-button class="sideBtn">我的信息</el-button>
+            <el-button class="sideBtn" @click="$router.push('/users/approvals')">审批列表</el-button>
+            <el-button class="sideBtn" @click="$router.push('/users/info')">我的信息</el-button>
           </div>
         </el-card>
 

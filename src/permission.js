@@ -14,18 +14,20 @@ router.beforeEach(async(to, from, next) => {
     // 如果去登录页 ,跳到主页
     if (to.path === '/login') {
       next('/')
+      // 如果不是
     } else {
       // ! NavBar 组件里 created 钩子里面调用获取用户信息的 action 也可以
+      // 判断是否有用户资料
       if (!store.getters.name) {
-        // 如果没有 username 表示当前用户资料没有获取过
-        // 为什么要写await 因为我们想获取完资料再去放行 便于后续的处理
+        // 没有  就去获取
         const { roles } = await store.dispatch('user/getUserInfo')
         // 筛选当前用户的可用动态路由
         const routes = await store.dispatch('permission/filterRoutes', roles.menus)
-        // addRoutes 添加路由之后, 要求必须再执行一次路由的逻辑
+        //! addRoutes 添加路由之后, 要求必须再执行一次路由的逻辑 或者 重新刷新页面
         router.addRoutes(routes)
         next(to.path)
       } else {
+        // 有
         next()
       }
     }
@@ -39,7 +41,7 @@ router.beforeEach(async(to, from, next) => {
       next('/login')
     }
   }
-  // 为了解决切换地址时进度条不关闭的问题
+  //! 为了解决切换地址时进度条不关闭的问题
   // 同一个地址间的跳转,并不会触发 beforeEach 和 afterEach
   NProgress.done()
 })

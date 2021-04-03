@@ -6,6 +6,7 @@ export default {
   meta: { name: 'employees' },
   children: [
     { path: '',
+      name: 'employees',
       component: () => import('@/views/employees/index'),
       meta: { title: '员工', icon: 'people' }
     },
