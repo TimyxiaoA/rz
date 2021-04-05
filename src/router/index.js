@@ -94,7 +94,9 @@ export const asyncRoutes = [
 ]
 
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
+  // history 模式
+  mode: 'history', // require service support
+  base: '/hr/', // 配置项目的基础地址
   scrollBehavior: () => ({ y: 0 }), // 管理滚动行为 如果出现滚动 切换就让页面回到顶部
   routes: [...constantRoutes] // 静态路由
 })
