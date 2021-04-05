@@ -57,7 +57,7 @@
       </el-card>
 
       <!-- 新增或编辑的弹层 -->
-      <el-dialog title="编辑角色" :visible="showDialog" @close="btnCancel">
+      <el-dialog :title="roleTitle" :visible.sync="showDialog" @close="btnCancel">
         <el-form ref="roleFormRef" :model="roleForm" :rules="rules" label-width="120px">
           <el-form-item label="角色名称" prop="name">
             <el-input v-model="roleForm.name" />
@@ -134,7 +134,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['companyId'])
+    ...mapGetters(['companyId']),
+    roleTitle() {
+      return this.roleForm.id ? '编辑角色' : '添加角色'
+    }
   },
   created() {
     this.getRoleList()
@@ -178,13 +181,13 @@ export default {
     },
     // 修改或添加角色按钮
     async btnOk() {
-      const formDate = this.roleForm
-      if (formDate.id) {
+      const formdata = this.roleForm
+      if (formdata.id) {
         // 编辑
-        await editRole(formDate)
+        await editRole(formdata)
       } else {
         // 添加
-        await addRole(formDate)
+        await addRole(formdata)
       }
       this.$message.success('设置成功')
       this.showDialog = false
